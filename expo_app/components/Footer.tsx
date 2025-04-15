@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { useRouter } from 'expo-router';
 
 interface FooterProps {
   activeTab: string;
@@ -10,12 +11,19 @@ interface FooterProps {
 }
 
 export function Footer({ activeTab, onTabPress }: FooterProps) {
+  const router = useRouter();
+  
   const tabs = [
-    { name: 'home', icon: 'home-outline', label: 'Главная' },
-    { name: 'cart', icon: 'cart-outline', label: 'Корзина' },
-    { name: 'search', icon: 'search-outline', label: 'Поиск' },
-    { name: 'profile', icon: 'person-outline', label: 'Профиль' },
+    { name: 'home', icon: 'home-outline', label: 'Главная', route: '/' },
+    { name: 'cart', icon: 'cart-outline', label: 'Корзина', route: '/cart' },
+    { name: 'search', icon: 'search-outline', label: 'Поиск', route: '/search' },
+    { name: 'profile', icon: 'person-outline', label: 'Профиль', route: '/profile' },
   ];
+
+  const handlePress = (tab: typeof tabs[0]) => {
+    onTabPress(tab.name);
+    router.push(tab.route);
+  };
 
   return (
     <ThemedView style={styles.footer}>
@@ -23,7 +31,7 @@ export function Footer({ activeTab, onTabPress }: FooterProps) {
         <TouchableOpacity
           key={tab.name}
           style={styles.tab}
-          onPress={() => onTabPress(tab.name)}
+          onPress={() => handlePress(tab)}
         >
           <Ionicons
             name={tab.icon as any}
